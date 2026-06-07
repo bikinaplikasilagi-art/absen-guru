@@ -1,0 +1,6 @@
+{
+  "name": "GuruPresence",
+  "description": "Sistem absensi guru digital dengan verifikasi selfie, geofencing lokasi sekolah, manajemen izin/cuti, dan dashboard monitoring real-time.",
+  "requestFramePermissions": ["camera", "geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

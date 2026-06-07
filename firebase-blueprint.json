@@ -1,0 +1,164 @@
+{
+  "entities": {
+    "Teacher": {
+      "title": "Teacher",
+      "description": "Teacher and staff profiles",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nip": { "type": "string" },
+        "nama": { "type": "string" },
+        "jabatan": { "type": "string" },
+        "email": { "type": "string" },
+        "sisaCuti": { "type": "number" },
+        "fotoUrl": { "type": "string" },
+        "password": { "type": "string" },
+        "customAdded": { "type": "boolean" }
+      },
+      "required": ["id", "nip", "nama", "jabatan", "email", "sisaCuti"]
+    },
+    "AttendanceRecord": {
+      "title": "AttendanceRecord",
+      "description": "Daily attendance logs",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "teacherId": { "type": "string" },
+        "teacherName": { "type": "string" },
+        "date": { "type": "string" },
+        "checkInTime": { "type": "string" },
+        "checkInPhoto": { "type": "string" },
+        "checkInLocation": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" }
+          }
+        },
+        "checkInDistanceMeters": { "type": "number" },
+        "checkOutTime": { "type": "string" },
+        "checkOutPhoto": { "type": "string" },
+        "checkOutLocation": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" }
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Hadir", "Terlambat", "Alpa", "Izin", "Sakit", "Dinas Luar", "Pelatihan"]
+        },
+        "isVerified": { "type": "boolean" }
+      },
+      "required": ["id", "teacherId", "teacherName", "date", "status", "isVerified"]
+    },
+    "LeaveRequest": {
+      "title": "LeaveRequest",
+      "description": "Teacher permit or sick leave request",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "teacherId": { "type": "string" },
+        "teacherName": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": ["Sakit", "Izin Pribadi", "Dinas Luar", "Pelatihan", "Cuti Tahunan"]
+        },
+        "startDate": { "type": "string" },
+        "endDate": { "type": "string" },
+        "reason": { "type": "string" },
+        "attachmentName": { "type": "string" },
+        "attachmentData": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["Pending", "Approved", "Rejected"]
+        },
+        "comments": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "teacherId", "teacherName", "type", "startDate", "endDate", "reason", "status", "timestamp"]
+    },
+    "SchoolConfig": {
+      "title": "SchoolConfig",
+      "description": "Geofencing coordinate settings and school timing",
+      "type": "object",
+      "properties": {
+        "schoolName": { "type": "string" },
+        "address": { "type": "string" },
+        "lat": { "type": "number" },
+        "lng": { "type": "number" },
+        "radiusMeters": { "type": "number" },
+        "checkInStart": { "type": "string" },
+        "checkInEnd": { "type": "string" },
+        "checkOutStart": { "type": "string" }
+      },
+      "required": ["schoolName", "address", "lat", "lng", "radiusMeters", "checkInStart", "checkInEnd", "checkOutStart"]
+    },
+    "AppNotification": {
+      "title": "AppNotification",
+      "description": "System alerts and notifications",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "isRead": { "type": "boolean" },
+        "type": {
+          "type": "string",
+          "enum": ["info", "success", "warning", "request"]
+        }
+      },
+      "required": ["id", "title", "message", "timestamp", "isRead", "type"]
+    },
+    "TeacherJournal": {
+      "title": "TeacherJournal",
+      "description": "Daily teaching agenda and journals written by teachers",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "teacherId": { "type": "string" },
+        "teacherName": { "type": "string" },
+        "date": { "type": "string" },
+        "kelas": { "type": "string" },
+        "mataPelajaran": { "type": "string" },
+        "materiPokok": { "type": "string" },
+        "jamKe": { "type": "string" },
+        "jumlahSiswaHadir": { "type": "number" },
+        "jumlahSiswaAbsen": { "type": "number" },
+        "catatanSiswaAbsen": { "type": "string" },
+        "hambatanDanSolusi": { "type": "string" },
+        "feedbackKepsek": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "teacherId", "teacherName", "date", "kelas", "mataPelajaran", "materiPokok", "jamKe", "jumlahSiswaHadir", "jumlahSiswaAbsen", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/teachers/{teacherId}": {
+      "schema": { "$ref": "Teacher" },
+      "description": "Collection of teacher and principal profile entries"
+    },
+    "/attendance/{attendanceId}": {
+      "schema": { "$ref": "AttendanceRecord" },
+      "description": "Collection of daily attendance entries for teachers"
+    },
+    "/leaves/{leaveId}": {
+      "schema": { "$ref": "LeaveRequest" },
+      "description": "Collection of sick leaves and external permit requests"
+    },
+    "/journals/{journalId}": {
+      "schema": { "$ref": "TeacherJournal" },
+      "description": "Collection of daily teaching journals and school agendas"
+    },
+    "/config/school": {
+      "schema": { "$ref": "SchoolConfig" },
+      "description": "Single-document global configuration settings for geofencing"
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "AppNotification" },
+      "description": "Collection of system alerts and event notifications"
+    }
+  }
+}

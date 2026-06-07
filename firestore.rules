@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Standard catch-all restriction
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Teachers profiles and credentials
+    match /teachers/{teacherId} {
+      allow read, write: if true;
+    }
+
+    // Daily attendance logs for check-in / check-out
+    match /attendance/{attendanceId} {
+      allow read, write: if true;
+    }
+
+    // Leave-request applications (permits)
+    match /leaves/{leaveId} {
+      allow read, write: if true;
+    }
+
+    // Teacher Teaching Journals and agendas
+    match /journals/{journalId} {
+      allow read, write: if true;
+    }
+
+    // Global configuration document for school timing and coordinates
+    match /config/school {
+      allow read, write: if true;
+    }
+
+    // Fail-safe config path
+    match /config/{any} {
+      allow read, write: if true;
+    }
+
+    // App notifications
+    match /notifications/{notificationId} {
+      allow read, write: if true;
+    }
+
+    // Connection testing documents
+    match /test-connection-doc/{id} {
+      allow read, write: if true;
+    }
+  }
+}
